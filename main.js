@@ -58,7 +58,7 @@ scenarios.forEach(scen => {
                 format: new ol.format.GeoJSON()
             }),
             style: new ol.style.Style({
-                fill: new ol.style.Fill({ color: 'rgba(230, 57, 70, 0.6)' }), // Red fill
+                fill: new ol.style.Fill({ color: 'rgba(230, 57, 71, 1)' }), // Red fill
                 stroke: null // No outline for cleaner look
             }),
             visible: false // Hidden by default
@@ -115,9 +115,6 @@ map.addLayer(sitesLayer);
    6. UI INTERACTION LOGIC
    ------------------------------------------------------------- */
 
-// NOTE: We removed the checkbox 'change' listener. 
-// The checkbox now sits silently until the user clicks "Update Map".
-
 // UPDATE MAP BUTTON LOGIC
 document.getElementById('update-btn').addEventListener('click', () => {
     // 1. Get User Input for Scenarios
@@ -128,26 +125,37 @@ document.getElementById('update-btn').addEventListener('click', () => {
     for (const r of yearRadios) { if (r.checked) currentYear = r.value; }
 
     // 2. Manage Flood Layers
+    const floodCheckbox = document.getElementById('flood-toggle');
+    
     // Hide ALL flood layers first
     Object.keys(floodLayers).forEach(key => {
         floodLayers[key].setVisible(false);
     });
 
-    // Show ONLY the selected flood layer
+    // Show ONLY the selected flood layer (IF the box is checked)
     const selectedKey = `${currentScenario}_${currentYear}`;
     if (floodLayers[selectedKey]) {
-        floodLayers[selectedKey].setVisible(true);
+        // If checkbox is ON, show layer. If OFF, keep hidden.
+        floodLayers[selectedKey].setVisible(floodCheckbox.checked);
     }
 
-    // 3. Manage Sites Layer (The Logic You Requested)
+    // 3. Manage Sites Layer
     const sitesCheckbox = document.getElementById('sites-toggle');
     
-    // First, update the data matrix (Yellow Dots) to match the NEW scenario
+    // Update the matrix
     sitesLayer.changed(); 
 
-    // Then, set visibility based on the checkbox status
-    // If box is checked -> Show sites. If unchecked -> Hide sites.
+    // Set visibility based on checkbox
     sitesLayer.setVisible(sitesCheckbox.checked);
+});
+
+// 4. FLOOD TOGGLE "LIVE" LISTENER (Optional but Recommended)
+// This lets the user turn the flood ON/OFF instantly without clicking "Update Map"
+document.getElementById('flood-toggle').addEventListener('change', function() {
+    const selectedKey = `${currentScenario}_${currentYear}`;
+    if (floodLayers[selectedKey]) {
+        floodLayers[selectedKey].setVisible(this.checked);
+    }
 });
 
 // RESET ZOOM BUTTON
