@@ -1,14 +1,11 @@
 /* -------------------------------------------------------------
-   1. DEFINE PROJECTION (Europe Albers Equal Area - ESRI:102013)
+   1. DEFINE PROJECTION (Custom UK Albers)
    ------------------------------------------------------------- */
-// Define the projection in Proj4
 proj4.defs("ESRI:102013", "+proj=aea +lat_1=43 +lat_2=62 +lat_0=30 +lon_0=10 +x_0=0 +y_0=0 +ellps=intl +units=m +no_defs");
-
-// Register it with OpenLayers manually
 ol.proj.proj4.register(proj4); 
 
-// Create the projection object
 const albersProjection = ol.proj.get('ESRI:102013');
+// Keep your corrected extent
 albersProjection.setExtent([-4000000, 1000000, 4000000, 8000000]);
 
 /* -------------------------------------------------------------
