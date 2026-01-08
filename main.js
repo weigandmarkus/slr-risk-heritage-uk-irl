@@ -114,9 +114,12 @@ map.addLayer(sitesLayer);
    6. UI INTERACTION LOGIC
    ------------------------------------------------------------- */
 
-// Update Map Button
+// NOTE: We removed the checkbox 'change' listener. 
+// The checkbox now sits silently until the user clicks "Update Map".
+
+// UPDATE MAP BUTTON LOGIC
 document.getElementById('update-btn').addEventListener('click', () => {
-    // 1. Get User Input
+    // 1. Get User Input for Scenarios
     const scenRadios = document.getElementsByName('scenario');
     for (const r of scenRadios) { if (r.checked) currentScenario = r.value; }
 
@@ -135,19 +138,23 @@ document.getElementById('update-btn').addEventListener('click', () => {
         floodLayers[selectedKey].setVisible(true);
     }
 
-    // 3. Manage Sites Layer
-    // Ensure the layer is visible
-    sitesLayer.setVisible(true);
-    // Force the layer to re-run the style function with new variables
+    // 3. Manage Sites Layer (The Logic You Requested)
+    const sitesCheckbox = document.getElementById('sites-toggle');
+    
+    // First, update the data matrix (Yellow Dots) to match the NEW scenario
     sitesLayer.changed(); 
+
+    // Then, set visibility based on the checkbox status
+    // If box is checked -> Show sites. If unchecked -> Hide sites.
+    sitesLayer.setVisible(sitesCheckbox.checked);
 });
 
-// Reset Zoom Button
+// RESET ZOOM BUTTON
 document.getElementById('reset-zoom-btn').addEventListener('click', () => {
     view.animate({
         center: ukCenter,
         zoom: 5,
-        duration: 1000 // Smooth animation
+        duration: 1000
     });
 });
 
