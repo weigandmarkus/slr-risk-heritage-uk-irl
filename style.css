@@ -263,3 +263,8 @@ hr {
 .toggle-control:hover {
     background: #444;
 }
+
+.multiply-layer {
+    mix-blend-mode: screen;  /* Makes the red "glow" and lets white text shine through */
+    opacity: 0.9;            /* Keeps the color strong */
+}

@@ -52,17 +52,19 @@ scenarios.forEach(scen => {
     years.forEach(yr => {
         const id = `${scen}_${yr}`; // e.g., "ssp1_2050"
         
-        const vectorLayer = new ol.layer.Vector({
-            source: new ol.source.Vector({
-                url: `${id}.geojson`, // Ensure file names match exactly
-                format: new ol.format.GeoJSON()
-            }),
-            style: new ol.style.Style({
-                fill: new ol.style.Fill({ color: 'rgba(230, 57, 71, 1)' }), // Red fill
-                stroke: null // No outline for cleaner look
-            }),
-            visible: false // Hidden by default
-        });
+        // Inside the floodLayers loop in main.js
+const vectorLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({
+        url: `${id}.geojson`,
+        format: new ol.format.GeoJSON()
+    }),
+    style: new ol.style.Style({
+        fill: new ol.style.Fill({ color: 'rgb(230, 57, 70)' }), // REMOVED opacity (alpha)
+        stroke: null
+    }),
+    className: 'multiply-layer', // ADD THIS CLASS
+    visible: false
+});
         
         floodLayers[id] = vectorLayer;
         map.addLayer(vectorLayer);
