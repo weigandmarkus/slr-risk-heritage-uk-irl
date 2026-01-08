@@ -9,7 +9,7 @@ ol.proj.proj4.register(proj4);
 
 // Create the projection object
 const albersProjection = ol.proj.get('ESRI:102013');
-albersProjection.setExtent([-3500000, 3500000, 3000000, 8500000]);
+albersProjection.setExtent([-4000000, 1000000, 4000000, 8000000]);
 
 /* -------------------------------------------------------------
    2. INITIALIZE MAP
