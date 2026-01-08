@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vienna's Oldest Trees</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/textures@1.2.0/dist/textures.js"></script>
+</head>
+
+<body>
+  <section>
+    <div id="legend">
+      <h3>Vienna’s Oldest Trees: <br>A Look at Pre-1950 Heritage</h3>
+      
+      <p><b>Data Findings:</b></p>
+      <p>Filtering for trees planted before 1950 reveals that the oldest vegetation is concentrated in the parks, while street trees are generally younger.<br><br>
+      Additionally, there is a visible correlation between age and trunk size. The oldest trees consistently exhibit the thickest trunk sizes. </p>
+      
+      <p style="font-size: 12px; margin-top: 10px;">
+          <i>Projection: Transverse Mercator<br>
+          Scale Types: Linear (Color, Size, Stroke)</i>
+      </p>
+      
+      <div id="legend-svg-container"></div>
+    </div>
+
+    <div id="mapContainer"></div>
+  </section>
+
+    <script src="mapping-script.js"></script>
+    
+    <div id="buttons">
+        <button onclick="zoomIn()">Zoom in (+)</button>
+        <button onclick="zoomOut()">Zoom out (-)</button>
+        <button onclick="resetZoom()">Reset View</button>
+    </div>
+</body>
+</html>
