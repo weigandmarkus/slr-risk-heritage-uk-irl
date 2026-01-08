@@ -16,8 +16,9 @@ const ukCenter = ol.proj.fromLonLat([-4.5, 54.5], albersProjection);
 const view = new ol.View({
     projection: albersProjection,
     center: ukCenter,
-    zoom: 5,
-    minZoom: 4
+    zoom: 5,     // Starting zoom
+    minZoom: 4,  // prevent zooming out to see the whole world
+    maxZoom: 9  // PREVENT zooming in too close (Hides the coastline gap)
 });
 
 const map = new ol.Map({
