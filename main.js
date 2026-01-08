@@ -1,16 +1,19 @@
 /* -------------------------------------------------------------
    1. DEFINE PROJECTION (Europe Albers Equal Area - ESRI:102013)
    ------------------------------------------------------------- */
+// Define the projection in Proj4
 proj4.defs("ESRI:102013", "+proj=aea +lat_1=43 +lat_2=62 +lat_0=30 +lon_0=10 +x_0=0 +y_0=0 +ellps=intl +units=m +no_defs");
-ol.proj.proj4.register(proj4);
+
+// Register it with OpenLayers manually
+ol.proj.proj4.register(proj4); 
+
+// Create the projection object
 const albersProjection = ol.proj.get('ESRI:102013');
-// Define extent to cover UK & Ireland roughly
 albersProjection.setExtent([-3500000, 3500000, 3000000, 8500000]);
 
 /* -------------------------------------------------------------
    2. INITIALIZE MAP
    ------------------------------------------------------------- */
-// Center on UK (Long -4.5, Lat 54.5) converted to Albers
 const ukCenter = ol.proj.fromLonLat([-4.5, 54.5], albersProjection);
 
 const view = new ol.View({
@@ -23,11 +26,9 @@ const view = new ol.View({
 const map = new ol.Map({
     target: 'map',
     view: view,
-    controls: ol.control.defaults.defaults().extend([
-        new ol.control.ZoomSlider() // Optional nice-to-have
-    ])
+    // Fix for missing map controls
+    controls: ol.control.defaults.defaults() 
 });
-
 /* -------------------------------------------------------------
    3. BASEMAP (Dark Matter)
    ------------------------------------------------------------- */
@@ -211,5 +212,7 @@ map.on('pointermove', function(e) {
         // Only trigger for the sites layer, ignore flood polygons
         return layer === sitesLayer;
     });
-    map.getTarget().style.cursor = hit ? 'pointer' : '';
+    
+    // FIX: Use getTargetElement() instead of getTarget()
+    map.getTargetElement().style.cursor = hit ? 'pointer' : '';
 });
