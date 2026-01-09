@@ -29,8 +29,8 @@ const map = new ol.Map({
 });
 /* -------------------------------------------------------------
    3. BASEMAP (Dark Matter)
-   ------------------------------------------------------------- */
-// Using CartoDB Dark Matter (reprojected on the fly by OpenLayers)
+   ------------------------------------------------------------- 
+// Using CartoDB Dark Matter (reprojected on the fly by OpenLayers)*/
 const baseLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
         url: 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
@@ -38,6 +38,22 @@ const baseLayer = new ol.layer.Tile({
     })
 });
 map.addLayer(baseLayer);
+
+/* -------------------------------------------------------------
+   3. BASEMAP (Dark Matter - High DPI)
+   ------------------------------------------------------------- 
+const baseLayer = new ol.layer.Tile({
+    source: new ol.source.XYZ({
+        // Added '@2x' to the URL for high-resolution tiles
+        url: 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+        
+        // Tells OpenLayers these tiles have double the pixel density
+        tilePixelRatio: 2,
+        
+        attributions: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>, &copy; CartoDB'
+    })
+});
+map.addLayer(baseLayer);*/
 
 /* -------------------------------------------------------------
    4. FLOOD LAYERS SETUP
