@@ -30,14 +30,14 @@ const map = new ol.Map({
 /* -------------------------------------------------------------
    3. BASEMAP (Dark Matter)
    ------------------------------------------------------------- 
-// Using CartoDB Dark Matter (reprojected on the fly by OpenLayers)*/
+// Using CartoDB Dark Matter (reprojected on the fly by OpenLayers)
 const baseLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
         url: 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
         attributions: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>, &copy; CartoDB'
     })
 });
-map.addLayer(baseLayer);
+map.addLayer(baseLayer);*/
 
 /* -------------------------------------------------------------
    3. BASEMAP (Dark Matter - High DPI)
@@ -54,6 +54,26 @@ const baseLayer = new ol.layer.Tile({
     })
 });
 map.addLayer(baseLayer);*/
+
+/* -------------------------------------------------------------
+   3. BASEMAP (Stadia Alidade Smooth Dark)
+   ------------------------------------------------------------- */
+const baseLayer = new ol.layer.Tile({
+    source: new ol.source.XYZ({
+        // Stadia Maps URL
+        url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}@2x.png',
+        
+        // Critical: Tells OpenLayers to shrink the big tiles down for sharpness
+        tilePixelRatio: 2,
+        // Required Attribution
+        attributions: [
+    '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a>',
+    '&copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>',
+    '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OSM</a>'
+]
+    })
+});
+map.addLayer(baseLayer);
 
 /* -------------------------------------------------------------
    4. FLOOD LAYERS SETUP
@@ -108,11 +128,11 @@ const sitesStyleFunction = function(feature) {
     const isAffected = feature.get(attributeKey);
 
     if (isAffected === 1) {
-        // Return a Yellow Dot with White Border
+        // Return a blue Dot with White Border
         return new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 5,
-                fill: new ol.style.Fill({ color: '#ffd700' }), // Gold/Yellow
+                fill: new ol.style.Fill({ color: '#1f78b4' }), // Gold/Yellow
                 stroke: new ol.style.Stroke({ color: '#ffffff', width: 1.5 })
             })
         });

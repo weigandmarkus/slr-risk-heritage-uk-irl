@@ -265,6 +265,11 @@ hr {
 }
 
 .multiply-layer {
-    mix-blend-mode: screen;  /* Makes the red "glow" and lets white text shine through */
+    mix-blend-mode: multiply;  /* Makes the red "glow" and lets white text shine through */
     opacity: 0.9;            /* Keeps the color strong */
+}
+
+.dot.blue {
+    background: #1f78b4; /* Must match the hex code in main.js */
+    border: 1px solid #fff;
 }
