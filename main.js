@@ -5,7 +5,8 @@ proj4.defs("ESRI:102013", "+proj=aea +lat_1=43 +lat_2=62 +lat_0=30 +lon_0=10 +x_
 ol.proj.proj4.register(proj4); 
 
 const albersProjection = ol.proj.get('ESRI:102013');
-// Keep your corrected extent
+
+// Extent covering the UK
 albersProjection.setExtent([-4000000, 1000000, 4000000, 8000000]);
 
 /* -------------------------------------------------------------
@@ -18,14 +19,29 @@ const view = new ol.View({
     center: ukCenter,
     zoom: 5,     // Starting zoom
     minZoom: 4,  // prevent zooming out to see the whole world
-    maxZoom: 9  // PREVENT zooming in too close (Hides the coastline gap)
+    maxZoom: 9  // prevent zooming in too close (Hides the coastline gap)
 });
+
+/*const map = new ol.Map({
+    target: 'map',
+    view: view,
+    controls: ol.control.defaults.defaults().extend([
+        new ol.control.ScaleLine({ units: 'metric' }) // <--- Scale Bar
+    ])
+});*/
 
 const map = new ol.Map({
     target: 'map',
     view: view,
-    // Fix for missing map controls
-    controls: ol.control.defaults.defaults() 
+    controls: ol.control.defaults.defaults().extend([
+        new ol.control.ScaleLine({ 
+            units: 'metric',
+            bar: false, // minimalist line style
+            steps: 4,
+            text: true,
+            minWidth: 100
+        }) 
+    ])
 });
 /* -------------------------------------------------------------
    3. BASEMAP (Dark Matter)
@@ -56,12 +72,12 @@ const baseLayer = new ol.layer.Tile({
 map.addLayer(baseLayer);*/
 
 /* -------------------------------------------------------------
-   3. BASEMAP (Stadia Alidade Smooth Dark)
+   3. BASEMAP (Stadia Alidade Smooth)
    ------------------------------------------------------------- */
 const baseLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
         // Stadia Maps URL
-        url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}@2x.png',
+        url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}@2x.png',
         
         // Critical: Tells OpenLayers to shrink the big tiles down for sharpness
         tilePixelRatio: 2,
@@ -78,29 +94,26 @@ map.addLayer(baseLayer);
 /* -------------------------------------------------------------
    4. FLOOD LAYERS SETUP
    ------------------------------------------------------------- */
-// We create a dictionary to store references to our 9 layers
 const floodLayers = {};
 const scenarios = ['ssp1', 'ssp2', 'ssp5'];
 const years = ['2050', '2100', '2150'];
 
-// Loop through all combinations to create hidden layers
 scenarios.forEach(scen => {
     years.forEach(yr => {
-        const id = `${scen}_${yr}`; // e.g., "ssp1_2050"
+        const id = `${scen}_${yr}`;
         
-        // Inside the floodLayers loop in main.js
-const vectorLayer = new ol.layer.Vector({
-    source: new ol.source.Vector({
-        url: `${id}.geojson`,
-        format: new ol.format.GeoJSON()
-    }),
-    style: new ol.style.Style({
-        fill: new ol.style.Fill({ color: 'rgb(230, 57, 70)' }), // REMOVED opacity (alpha)
-        stroke: null
-    }),
-    className: 'multiply-layer', // ADD THIS CLASS
-    visible: false
-});
+        const vectorLayer = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                url: `${id}.geojson`,
+                format: new ol.format.GeoJSON()
+            }),
+            style: new ol.style.Style({
+                fill: new ol.style.Fill({ color: 'rgb(230, 57, 70)' }), 
+                stroke: null
+            }),
+            className: 'multiply-layer', 
+            visible: false
+        });
         
         floodLayers[id] = vectorLayer;
         map.addLayer(vectorLayer);
@@ -132,7 +145,7 @@ const sitesStyleFunction = function(feature) {
         return new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 5,
-                fill: new ol.style.Fill({ color: '#1f78b4' }), // Gold/Yellow
+                fill: new ol.style.Fill({ color: '#1f78b4' }), // Blue Fill
                 stroke: new ol.style.Stroke({ color: '#ffffff', width: 1.5 })
             })
         });
@@ -187,6 +200,7 @@ document.getElementById('update-btn').addEventListener('click', () => {
     sitesLayer.setVisible(sitesCheckbox.checked);
 });
 
+/*
 // 4. FLOOD TOGGLE "LIVE" LISTENER (Optional but Recommended)
 // This lets the user turn the flood ON/OFF instantly without clicking "Update Map"
 document.getElementById('flood-toggle').addEventListener('change', function() {
@@ -195,6 +209,8 @@ document.getElementById('flood-toggle').addEventListener('change', function() {
         floodLayers[selectedKey].setVisible(this.checked);
     }
 });
+*/
+
 
 // RESET ZOOM BUTTON
 document.getElementById('reset-zoom-btn').addEventListener('click', () => {
@@ -205,14 +221,15 @@ document.getElementById('reset-zoom-btn').addEventListener('click', () => {
     });
 });
 
+
 /* -------------------------------------------------------------
-   7. POPUP LOGIC
+   7 & 8. UNIFIED INTERACTION (Highlight + Popup)
    ------------------------------------------------------------- */
 const container = document.getElementById('popup');
 const content = document.getElementById('popup-content');
 const closer = document.getElementById('popup-closer');
 
-// Create Overlay
+// 1. Create the Popup Overlay
 const overlay = new ol.Overlay({
     element: container,
     autoPan: true,
@@ -220,50 +237,67 @@ const overlay = new ol.Overlay({
 });
 map.addOverlay(overlay);
 
-// Close Button Logic
-closer.onclick = function() {
-    overlay.setPosition(undefined);
-    closer.blur();
-    return false;
-};
+// 2. Define the "Selected" Style (Cyan Highlight)
+const selectedStyle = new ol.style.Style({
+    image: new ol.style.Circle({
+        radius: 8, 
+        fill: new ol.style.Fill({ color: '#00e5ff' }), // Cyan
+        stroke: new ol.style.Stroke({ color: '#fff', width: 3 })
+    }),
+    zIndex: 999
+});
 
-// Map Click Event
-map.on('click', function(evt) {
-    const feature = map.forEachFeatureAtPixel(evt.pixel, function(feat) {
-        return feat;
-    });
+// 3. Create the Logic (One tool to rule them all)
+const selectInteraction = new ol.interaction.Select({
+    layers: [sitesLayer], // Ignore flood zones
+    style: selectedStyle,
+    hitTolerance: 5
+});
+map.addInteraction(selectInteraction);
 
-    // Only show popup if we clicked a feature AND it's a visible site
-    // (We check geometry type to avoid clicking flood polygons)
-    if (feature && feature.getGeometry().getType() === 'Point') {
+// 4. When a site is selected, Show Popup
+selectInteraction.on('select', function(e) {
+    if (e.selected.length > 0) {
+        // A site was clicked!
+        const feature = e.selected[0];
+        const coordinate = feature.getGeometry().getCoordinates();
+
+        // Get Data
         const name = feature.get('Unified_Name') || 'Unknown Site';
         const type = feature.get('Unified_Type') || 'Heritage Site';
         const link = feature.get('Unified_Link');
 
+        // Build HTML
         let html = `
             <h3 class="popup-title">${name}</h3>
             <div class="popup-type">${type}</div>
         `;
-
         if (link && link !== 'N/A') {
             html += `<a href="${link}" target="_blank" class="popup-link">More Information &rarr;</a>`;
         }
 
+        // Show it
         content.innerHTML = html;
-        overlay.setPosition(evt.coordinate);
+        overlay.setPosition(coordinate);
     } else {
-        overlay.setPosition(undefined); // Close if clicked on empty map
+        // Nothing selected (clicked empty space) -> Close Popup
+        overlay.setPosition(undefined);
+        closer.blur();
     }
 });
 
-// Cursor Pointer Logic (Change cursor to hand when hovering over site)
+// 5. Close Button Logic
+closer.onclick = function() {
+    selectInteraction.getFeatures().clear(); // Turn off the Cyan highlight
+    overlay.setPosition(undefined);          // Hide the popup
+    closer.blur();
+    return false;
+};
+
+// 6. Cursor Pointer (Hand icon on hover)
 map.on('pointermove', function(e) {
+    if (e.dragging) return;
     const pixel = map.getEventPixel(e.originalEvent);
-    const hit = map.hasFeatureAtPixel(pixel, (layer) => {
-        // Only trigger for the sites layer, ignore flood polygons
-        return layer === sitesLayer;
-    });
-    
-    // FIX: Use getTargetElement() instead of getTarget()
+    const hit = map.hasFeatureAtPixel(pixel, (layer) => layer === sitesLayer);
     map.getTargetElement().style.cursor = hit ? 'pointer' : '';
 });

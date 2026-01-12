@@ -152,7 +152,12 @@ hr {
     margin-right: 10px;
 }
 
-.dot.red { background-color: rgba(255, 0, 0, 0.6); border: 1px solid red; }
+/* Update .dot.red in style.css */
+.dot.red { 
+    background-color: rgb(230, 57, 70); /* Match the JS color #E63946 */
+    border: 1px solid #e63946; /* No border needed for the flood block */
+    opacity: 0.9; /* Match the map opacity */
+}
 .dot.yellow { background-color: #ffd700; border: 1px solid white; }
 
 /* Map Area */
@@ -265,7 +270,7 @@ hr {
 }
 
 .multiply-layer {
-    mix-blend-mode: multiply;  /* Makes the red "glow" and lets white text shine through */
+    mix-blend-mode: screen;  /* Makes the red "glow" and lets white text shine through; screen for dark maps, multiply for light maps */
     opacity: 0.9;            /* Keeps the color strong */
 }
 
