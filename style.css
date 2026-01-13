@@ -157,7 +157,7 @@ hr {
     border: 1px solid #e63946; 
     opacity: 0.9; 
 }
-.dot.yellow { background-color: #ffd700; border: 1px solid white; }
+.dot.yellow { background-color: #38310a; border: 1px solid white; }
 
 .dot.blue {
     background: #1f78b4; /* Must match the hex code in main.js */
