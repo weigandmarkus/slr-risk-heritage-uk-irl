@@ -5,15 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drowning Heritage: UK & Ireland</title>
     
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading Data...</div>
+    </div>
+
+    <div id="about-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span id="close-modal" class="close-btn">&times;</span>
+            <h2>About this Project</h2>
+            
+            <div class="modal-body">
+                <h3>Methodology & Uncertainty</h3>
+                <p>
+                    Flood zones represent mean projected high-water marks based on global sea-level rise models. 
+                    This is a "bathtub model" visualization; actual flood extent may vary due to local topography, coastal defenses, and storm surges.
+                    <br><em>Uncertainty is visualized by comparing the three SSP scenarios below.</em>
+                </p>
+
+                <h3>Scenario Definitions (IPCC AR6)</h3>
+                <ul>
+                    <li><strong>SSP1-2.6 (Low):</strong> The "Paris Agreement" goal. Drastic emissions cuts; warming limited to ~1.8°C.</li>
+                    <li><strong>SSP2-4.5 (Medium):</strong> "Middle of the Road." Current trends continue; warming ~2.7°C.</li>
+                    <li><strong>SSP5-8.5 (High):</strong> "Fossil-Fueled Development." Worst-case scenario; warming >4.4°C.</li>
+                </ul>
+
+                <h3>Data Sources</h3>
+                <ul>
+                    <li><strong>Basemap:</strong> Stadia Maps, OpenMapTiles, OpenStreetMap.</li>
+                    <li><strong>Flood Projections:</strong> Aggregated from IPCC AR6 Sea Level Projection Tool.</li>
+                    <li><strong>Archaeological Data:</strong> Historic England, HES, CADW, National Monuments Service.</li>
+                </ul>
+                
+                <p class="modal-footer">
+                    Created by Markus Weigand, Sanna Seldenrijk | Technical University of Munich | 2026
+                </p>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="sidebar">
             <h1>Drowning Heritage</h1>
-            <p class="subtitle">The threat of sea level rise on archaeological sites in the UK and Ireland</p>
+            <p class="subtitle">The threat of sea level rise on archaeological sites in the UK and Ireland.</p>
             
             <hr>
 
@@ -50,18 +91,23 @@
                     </label>
                 </div>
             </div>
-<div class="control-group">
-    <label class="toggle-control">
-        <input type="checkbox" id="flood-toggle" checked> <span class="toggle-label">Show Flood Zones</span>
-    </label>
-    
-    <label class="toggle-control">
-        <input type="checkbox" id="sites-toggle" checked>
-        <span class="toggle-label">Show Affected Archaeological Sites</span>
-    </label>
-</div>
+
+            <div class="control-group">
+                <label class="toggle-control">
+                    <input type="checkbox" id="flood-toggle" checked> 
+                    <span class="toggle-label">Show Flood Zones</span>
+                </label>
+                
+                <label class="toggle-control">
+                    <input type="checkbox" id="sites-toggle" checked>
+                    <span class="toggle-label">Show Affected Archaeological Sites</span>
+                </label>
+            </div>
+
             <button id="update-btn" class="primary-btn">Update Map</button>
             <button id="reset-zoom-btn" class="secondary-btn">Reset Zoom</button>
+
+            <button id="about-btn" class="secondary-btn" style="margin-bottom: 20px; border: 1px solid #666;">About & Methodology</button>
 
             <div class="legend">
                 <h4>Legend</h4>
@@ -80,7 +126,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
-    
     <script src="main.js"></script>
 </body>
-</html> 
+</html>

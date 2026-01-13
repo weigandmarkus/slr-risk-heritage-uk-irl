@@ -301,3 +301,41 @@ map.on('pointermove', function(e) {
     const hit = map.hasFeatureAtPixel(pixel, (layer) => layer === sitesLayer);
     map.getTargetElement().style.cursor = hit ? 'pointer' : '';
 });
+
+/* -------------------------------------------------------------
+   9. LOADING SCREEN & ABOUT MODAL LOGIC
+   ------------------------------------------------------------- */
+
+// A. LOADING SCREEN
+// We wait for the map to finish its first render frame
+map.once('rendercomplete', function() {
+    const loader = document.getElementById('loading-screen');
+    if (loader) {
+        loader.style.opacity = '0'; // Fade out
+        setTimeout(() => {
+            loader.style.display = 'none'; // Remove from layout
+        }, 500); // Wait for fade to finish
+    }
+});
+
+// B. ABOUT MODAL
+const modal = document.getElementById('about-modal');
+const btn = document.getElementById('about-btn');
+const span = document.getElementById('close-modal');
+
+// Open Modal
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// Close Modal (X button)
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Close Modal (Click outside)
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
