@@ -221,6 +221,29 @@ document.getElementById('reset-zoom-btn').addEventListener('click', () => {
     });
 });
 
+// NEW: RESET MAP BUTTON LOGIC
+document.getElementById('reset-map-btn').addEventListener('click', () => {
+    // 1. Hide ALL flood layers
+    Object.keys(floodLayers).forEach(key => {
+        floodLayers[key].setVisible(false);
+    });
+
+    // 2. Hide Sites Layer
+    sitesLayer.setVisible(false);
+
+    // 3. Clear any active selection (Cyan highlight)
+    // We access the interaction we created in Section 7/8
+    // Note: Make sure 'selectInteraction' is accessible here
+    if (typeof selectInteraction !== 'undefined') {
+        selectInteraction.getFeatures().clear();
+    }
+    
+    // 4. Close Popup if open
+    if (typeof overlay !== 'undefined') {
+        overlay.setPosition(undefined);
+    }
+});
+
 
 /* -------------------------------------------------------------
    7 & 8. UNIFIED INTERACTION (Highlight + Popup)

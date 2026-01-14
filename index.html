@@ -53,68 +53,74 @@
 
     <div class="container">
         <div class="sidebar">
-            <h1>Drowning Heritage</h1>
-            <p class="subtitle">The threat of sea level rise on archaeological sites in the UK and Ireland.</p>
-            
-            <hr>
+    <h1>Drowning Heritage</h1>
+    
+    <p class="subtitle">The threat of sea level rise on archaeological sites in the UK and Ireland.</p>
+    
+    <button id="about-btn" class="secondary-btn" style="margin-bottom: 20px; width: 100%;">About & Methodology</button>
+    
+    <hr>
 
-            <div class="control-group">
-                <h3>1. Select Scenario</h3>
-                <label class="radio-option">
-                    <input type="radio" name="scenario" value="ssp1" checked>
-                    <span>SSP1-2.6 (Paris Agreement)</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="scenario" value="ssp2">
-                    <span>SSP2-4.5 (Middle of the Road)</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="scenario" value="ssp5">
-                    <span>SSP5-8.5 Low Confidence (Fossil-Fueled)</span>
-                </label>
-            </div>
+    <div class="legend" style="margin-bottom: 25px;">
+        <h4>Legend</h4>
+        <div class="legend-item"><span class="dot red"></span> Flood Zone</div>
+        <div class="legend-item"><span class="dot blue"></span> Affected Heritage Site</div>
+    </div>
 
-            <div class="control-group">
-                <h3>2. Select Year</h3>
-                <div class="year-selector">
-                    <label class="radio-button">
-                        <input type="radio" name="year" value="2050" checked>
-                        <span>2050</span>
-                    </label>
-                    <label class="radio-button">
-                        <input type="radio" name="year" value="2100">
-                        <span>2100</span>
-                    </label>
-                    <label class="radio-button">
-                        <input type="radio" name="year" value="2150">
-                        <span>2150</span>
-                    </label>
-                </div>
-            </div>
+    <div class="control-group">
+        <h3>1. Select Scenario</h3>
+        <label class="radio-option">
+            <input type="radio" name="scenario" value="ssp1" checked>
+            <span>SSP1-2.6 (Paris Agreement)</span>
+        </label>
+        <label class="radio-option">
+            <input type="radio" name="scenario" value="ssp2">
+            <span>SSP2-4.5 (Middle of the Road)</span>
+        </label>
+        <label class="radio-option">
+            <input type="radio" name="scenario" value="ssp5">
+            <span>SSP5-8.5 (Fossil-Fueled)</span>
+        </label>
+    </div>
 
-            <div class="control-group">
-                <label class="toggle-control">
-                    <input type="checkbox" id="flood-toggle" checked> 
-                    <span class="toggle-label">Show Flood Zones</span>
-                </label>
-                
-                <label class="toggle-control">
-                    <input type="checkbox" id="sites-toggle" checked>
-                    <span class="toggle-label">Show Affected Archaeological Sites</span>
-                </label>
-            </div>
-
-            <button id="update-btn" class="primary-btn">Update Map</button>
-            <button id="reset-zoom-btn" class="secondary-btn">Reset Zoom</button>
-
-            <button id="about-btn" class="secondary-btn" style="margin-bottom: 20px; border: 1px solid #666;">About & Methodology</button>
-
-            <div class="legend">
-                <h4>Legend</h4>
-                <div class="legend-item"><span class="dot red"></span> Flood Zone</div>
-                <div class="legend-item"><span class="dot blue"></span> Affected Heritage Site</div>
-            </div>
+    <div class="control-group">
+        <h3>2. Select Year</h3>
+        <div class="year-selector">
+            <label class="radio-button">
+                <input type="radio" name="year" value="2050" checked>
+                <span>2050</span>
+            </label>
+            <label class="radio-button">
+                <input type="radio" name="year" value="2100">
+                <span>2100</span>
+            </label>
+            <label class="radio-button">
+                <input type="radio" name="year" value="2150">
+                <span>2150</span>
+            </label>
         </div>
+    </div>
+
+    <div class="control-group">
+        <label class="toggle-control">
+            <input type="checkbox" id="flood-toggle" checked> 
+            <span class="toggle-label">Show Flood Zones</span>
+        </label>
+        
+        <label class="toggle-control">
+            <input type="checkbox" id="sites-toggle" checked>
+            <span class="toggle-label">Show Affected Archaeological Sites</span>
+        </label>
+    </div>
+
+    <button id="update-btn" class="primary-btn">Update Map</button>
+    
+    <div style="display: flex; gap: 10px;">
+        <button id="reset-map-btn" class="secondary-btn" style="flex: 1;">Reset Map</button>
+        <button id="reset-zoom-btn" class="secondary-btn" style="flex: 1;">Reset Zoom</button>
+    </div>
+
+</div>
 
         <div id="map" class="map"></div>
     </div>
