@@ -22,14 +22,6 @@ const view = new ol.View({
     maxZoom: 9  // prevent zooming in too close (Hides the coastline gap)
 });
 
-/*const map = new ol.Map({
-    target: 'map',
-    view: view,
-    controls: ol.control.defaults.defaults().extend([
-        new ol.control.ScaleLine({ units: 'metric' }) // <--- Scale Bar
-    ])
-});*/
-
 const map = new ol.Map({
     target: 'map',
     view: view,
@@ -43,36 +35,9 @@ const map = new ol.Map({
         }) 
     ])
 });
-/* -------------------------------------------------------------
-   3. BASEMAP (Dark Matter)
-   ------------------------------------------------------------- 
-// Using CartoDB Dark Matter (reprojected on the fly by OpenLayers)
-const baseLayer = new ol.layer.Tile({
-    source: new ol.source.XYZ({
-        url: 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        attributions: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>, &copy; CartoDB'
-    })
-});
-map.addLayer(baseLayer);*/
 
 /* -------------------------------------------------------------
-   3. BASEMAP (Dark Matter - High DPI)
-   ------------------------------------------------------------- 
-const baseLayer = new ol.layer.Tile({
-    source: new ol.source.XYZ({
-        // Added '@2x' to the URL for high-resolution tiles
-        url: 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        
-        // Tells OpenLayers these tiles have double the pixel density
-        tilePixelRatio: 2,
-        
-        attributions: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>, &copy; CartoDB'
-    })
-});
-map.addLayer(baseLayer);*/
-
-/* -------------------------------------------------------------
-   3. BASEMAP (Stadia Alidade Smooth)
+   3. BASEMAP (Stadia Alidade Smooth Dark)
    ------------------------------------------------------------- */
 const baseLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
@@ -111,7 +76,7 @@ scenarios.forEach(scen => {
                 fill: new ol.style.Fill({ color: 'rgb(230, 57, 70)' }), 
                 stroke: null
             }),
-            className: 'multiply-layer', 
+            className: 'blend-layer', 
             visible: false
         });
         
@@ -200,18 +165,6 @@ document.getElementById('update-btn').addEventListener('click', () => {
     sitesLayer.setVisible(sitesCheckbox.checked);
 });
 
-/*
-// 4. FLOOD TOGGLE "LIVE" LISTENER (Optional but Recommended)
-// This lets the user turn the flood ON/OFF instantly without clicking "Update Map"
-document.getElementById('flood-toggle').addEventListener('change', function() {
-    const selectedKey = `${currentScenario}_${currentYear}`;
-    if (floodLayers[selectedKey]) {
-        floodLayers[selectedKey].setVisible(this.checked);
-    }
-});
-*/
-
-
 // RESET ZOOM BUTTON
 document.getElementById('reset-zoom-btn').addEventListener('click', () => {
     view.animate({
@@ -232,8 +185,6 @@ document.getElementById('reset-map-btn').addEventListener('click', () => {
     sitesLayer.setVisible(false);
 
     // 3. Clear any active selection (Cyan highlight)
-    // We access the interaction we created in Section 7/8
-    // Note: Make sure 'selectInteraction' is accessible here
     if (typeof selectInteraction !== 'undefined') {
         selectInteraction.getFeatures().clear();
     }

@@ -29,19 +29,19 @@ body, html {
 h1 {
     font-size: 1.5rem;
     margin-bottom: 5px;
-    color: #4db8ff; /* CHANGED: Now Light Blue (was #ffffff) */
+    color: #4db8ff; 
 }
 
 .subtitle {
-    font-size: 1.1rem; /* CHANGED: Increased size (was 0.9rem) */
+    font-size: 1.1rem; 
     color: #b0b0b0;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     line-height: 1.4;
 }
 
 h3 {
     font-size: 1rem;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     color: #4db8ff;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -51,18 +51,19 @@ hr {
     border: 0;
     border-top: 1px solid #444;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 1px;
+    margin-top: 10px;
 }
 
 .control-group {
-    margin-bottom: 25px;
+    margin-bottom: 12px;
 }
 
 /* Radio Button Styling */
 .radio-option {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     cursor: pointer;
     font-size: 0.95rem;
 }
@@ -114,7 +115,7 @@ hr {
     font-weight: bold;
     cursor: pointer;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     transition: background 0.2s;
 }
 
@@ -129,40 +130,13 @@ hr {
     padding: 10px;
     cursor: pointer;
     border-radius: 5px;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
 }
 
 .secondary-btn:hover {
     background-color: #555;
 }
 
-/* Legend */
-.legend-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-}
-
-.dot {
-    height: 12px;
-    width: 12px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 10px;
-}
-
-.dot.red { 
-    background-color: rgb(230, 57, 70); 
-    border: 1px solid #e63946; 
-    opacity: 0.9; 
-}
-.dot.yellow { background-color: #38310a; border: 1px solid white; }
-
-.dot.blue {
-    background: #1f78b4; /* Must match the hex code in main.js */
-    border: 1px solid #fff;
-}
 
 /* Map Area */
 .map {
@@ -251,7 +225,7 @@ hr {
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     background: #333;
     padding: 10px;
     border-radius: 5px;
@@ -273,7 +247,7 @@ hr {
     background: #444;
 }
 
-.multiply-layer {
+.blend-layer {
     mix-blend-mode: screen;  /* Makes the red "glow" and lets white text shine through; screen for dark maps, multiply for light maps */
     opacity: 0.9;            /* Keeps the color strong */
 }
@@ -319,7 +293,7 @@ hr {
 }
 
 /* -------------------------------------------------------------
-   ABOUT MODAL
+   MODAL
    ------------------------------------------------------------- */
 .modal-overlay {
     display: none; /* Hidden by default */
@@ -387,4 +361,73 @@ hr {
     text-align: center;
     border-top: 1px solid #333;
     padding-top: 15px;
+}
+
+/* -------------------------------------------------------------
+   LEGEND STYLES
+   ------------------------------------------------------------- */
+
+/* Make "Legend" headline bigger (matches h3 size) */
+.legend h4 {
+    font-size: 1.0rem; /* Increased from default */
+    margin-bottom: 5px;
+    color: #e0e0e0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    color: #cccccc; /* Slightly softer white for text */
+}
+
+/* 1. DOT STYLE (For Points) */
+.dot {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%; /* Circle */
+    display: inline-block;
+    margin-right: 19px; /* More breathing room */
+    flex-shrink: 0;     /* Prevents squishing on small screens */
+}
+
+/* 2. RECTANGLE STYLE (For Areas) - 3:5 Ratio (12px : 20px) */
+.rectangle {
+    height: 12px;
+    width: 20px;
+    border-radius: 2px; /* Slight rounding for modern look */
+    display: inline-block;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+/* --- COLOR CLASSES --- */
+
+/* Sites (Blue with white border) */
+.dot.blue {
+    background: #1f78b4;
+    border: 1px solid #fff;
+}
+
+/* Flood (Red - Matches Map) */
+.rectangle.red {
+    background-color: rgb(230, 57, 70);
+    border: 1px solid #f1656c;
+    opacity: 0.9;
+}
+
+/* Vegetation (Stadia Green) */
+.rectangle.green {
+    background-color: #3D4839; /* Your requested Hex */
+    border: 1px solid #4a5048; /* Subtle border for definition against dark sidebar */
+}
+
+/* Urban (Stadia Grey) */
+.rectangle.grey {
+    background-color: #333333; /* Your requested Hex */
+    border: 1px solid #444;    /* Subtle border */
 }
