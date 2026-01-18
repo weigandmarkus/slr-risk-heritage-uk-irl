@@ -23,36 +23,88 @@
             <h2>About this Project</h2>
             
             <div class="modal-body">
-                <h3>Methodology & Uncertainty</h3>
-                <p>
-                    Flood zones represent mean projected high-water marks based on global sea-level rise models. 
-                    This is a "bathtub model" visualization; actual flood extent may vary due to local topography, coastal defenses, and storm surges.
-                    <br><em>Uncertainty is visualized by comparing the three SSP scenarios below.</em>
-                </p>
+    <h3>What is this map?</h3>
+    <p>
+        This interactive tool visualizes the threat of future sea-level rise to the archaeological heritage of the United Kingdom and Ireland. 
+        By intersecting advanced climate projections with national heritage registers, we identify which historical sites are at risk of being lost to the ocean under different climate scenarios.
+    </p>
 
-                <h3>Scenario Definitions (IPCC AR6)</h3>
-                <ul>
-                    <li><strong>SSP1-2.6 (Low):</strong> The "Paris Agreement" goal. Drastic emissions cuts; warming limited to ~1.8°C.</li>
-                    <li><strong>SSP2-4.5 (Medium):</strong> "Middle of the Road." Current trends continue; warming ~2.7°C.</li>
-                    <li><strong>SSP5-8.5 Low Confidence (High):</strong> "Fossil-Fueled Development." Worst-case scenario; warming >4.4°C.</li>
-                </ul>
+    <h3>Theoretical Basis: Relative Sea Level (RSL)</h3>
+    <p>
+        This project visualizes Relative Sea Level (RSL) rather than just global averages. 
+        RSL accounts for local vertical land motion. In the UK and Ireland, the land in the north is rising (recovering from the last Ice Age), while the south is sinking.
+        <br>
+        <em>Note: The Shetland Islands are excluded from this model to maintain a higher resolution focus on the contiguous landmasses of Great Britain and Ireland.</em>
+    </p>
 
-                <h3>Data Sources</h3>
-                <ul>
-                    <li><strong>Basemap:</strong> Stadia Maps, OpenMapTiles, OpenStreetMap.</li>
-                    <li><strong>Flood Projections:</strong> Aggregated from IPCC AR6 Sea Level Projection Tool.</li>
-                    <li><strong>Archaeological Data:</strong> Historic England, HES, CADW, National Monuments Service.</li>
-                </ul>
-                
-                <p class="modal-footer">
-                    Created by Markus Weigand, Sanna Seldenrijk | Technical University of Munich | 2026
-                </p>
-            </div>
+    <h3>Modelling Workflow: Flood Zones</h3>
+    <p><strong>1. DEM Preparation:</strong></p>
+    <ul>
+        <li><strong>Source:</strong> Derived from Copernicus GLO-30 (DGED), using 32-bit floating-point precision to accurately model decimal water rises.</li>
+        <li><strong>Processing:</strong> 89 individual elevation tiles were mosaicked into a single continuous surface and reprojected to Europe Albers Equal Area Conic for accurate area calculation.</li>
+        <li><strong>Resampling:</strong> Pixels were resampled to be perfectly square to ensure interpolation algorithms calculated distance accurately.</li>
+    </ul>
+
+    <p><strong>2. Inundation Analysis (Modified Bathtub Model):</strong></p>
+    <ul>
+        <li><strong>Water Surface:</strong> We used IDW (Inverse Distance Weighted) Interpolation on regional projection points (derived from the NASA/IPCC Projection Tool). This creates a sloping water surface that accounts for regional gravity and tidal differences.</li>
+        <li><strong>Hydrological Connectivity:</strong> To prevent false flooding in isolated inland lowlands (e.g., quarries), we applied a Region Group algorithm. This filtered out isolated "puddles," ensuring only areas physically connected to the ocean are mapped as flooded.</li>
+    </ul>
+
+    <p><strong>3. Web Optimization:</strong></p>
+    <ul>
+        <li>Vector zones were simplified using the Douglas-Peucker algorithm (100m tolerance) and a minimum area threshold of 50,000 m² to optimize performance without losing visual accuracy.</li>
+    </ul>
+
+    <h3>Modelling Workflow: Archaeological Data</h3>
+    <p><strong>1. Data Harmonization:</strong></p>
+    <ul>
+        <li>We aggregated data from five separate national agencies (Historic England, HES, Cadw, NMS, and DfC).</li>
+        <li>Because every country uses different naming conventions, we created a unified schema, mapping local fields into a standardized format.</li>
+    </ul>
+
+    <p><strong>2. The Risk Matrix:</strong></p>
+    <ul>
+        <li>Instead of creating separate map layers for every year, we calculated a risk matrix. Every site was spatially intersected with every flood scenario.</li>
+        <li>This resulted in a binary coding system (0 = Safe, 1 = Flooded) embedded in the site's attributes, allowing the web map to instantly filter thousands of sites without reloading data.</li>
+    </ul>
+
+    <h3>Scenario Definitions (IPCC AR6)</h3>
+    <p>Source: IPCC AR6 WGI: Framing, Context, and Methods (2021), Cross-Chapter Box 1.4:</p>
+    <ul>
+        <li><strong>SSP1-2.6 (Paris Agreement):</strong> Stays below 2.0°C warming relative to 1850-1900 with implied net zero emissions in the second half of the century.</li>
+        <li><strong>SSP2-4.5 (Middle of the Road):</strong> Deviates mildly from a ‘no-additional-climate-policy’ reference scenario, resulting in a best-estimate warming around 2.7°C by 2100.</li>
+        <li><strong>SSP5-8.5 (Fossil-Fueled):</strong> A high reference scenario with no additional climate policy. Emission levels this high are only associated with fossil-fueled development pathways.</li>
+    </ul>
+
+    <h3>Data Sources</h3>
+    
+    <h4 style="color: #e0e0e0; font-size: 0.95rem; margin-top: 15px; margin-bottom: 5px;">Geospatial & Climate Data</h4>
+    <ul>
+        <li><strong>Elevation Model:</strong> Copernicus GLO-30 (DGED) - European Space Agency.</li>
+        <li><strong>Sea Level Projections:</strong> IPCC AR6 (Intergovernmental Panel on Climate Change).</li>
+        <li><strong>Control Point Data:</strong> NASA Sea Level Projection Tool.</li>
+        <li><strong>Basemap:</strong> Stadia Maps, OpenMapTiles, OpenStreetMap.</li>
+    </ul>
+
+    <h4 style="color: #e0e0e0; font-size: 0.95rem; margin-top: 15px; margin-bottom: 5px;">Archaeological Data</h4>
+    <ul>
+        <li><strong>Ireland:</strong> National Monuments Service (Archaeological Survey of Ireland).</li>
+        <li><strong>Scotland:</strong> Historic Environment Scotland (Scheduled Monuments).</li>
+        <li><strong>England:</strong> Historic England (National Heritage List).</li>
+        <li><strong>Wales:</strong> Cadw (Scheduled Monuments).</li>
+        <li><strong>Northern Ireland:</strong> Department for Communities (Sites and Monuments Record).</li>
+    </ul>
+    
+    <p class="modal-footer">
+        Created by Markus Weigand, Sanna Seldenrijk | Technical University of Munich | 2026
+    </p>
+</div>
         </div>
     </div>
 
     <div class="container">
-        <div class="sidebar">
+   <div class="sidebar">
     <h1>Drowning Heritage</h1>
     
     <p class="subtitle">The threat of sea level rise on archaeological sites in the UK and Ireland.</p>
@@ -62,28 +114,30 @@
     <hr>
 
     <div class="legend" style="margin-bottom: 10px;">
-    <h4>Legend</h4>
-    
-    <div class="legend-item">
-        <span class="dot blue"></span> 
-        Affected Heritage Site
+        <h4>Legend</h4>
+        
+        <div class="legend-item">
+            <span class="dot blue"></span> 
+            Affected Heritage Site
+        </div>
+
+        <div class="legend-item">
+            <span class="rectangle red"></span> 
+            Flood Zone
+        </div>
+
+        <div class="legend-item">
+            <span class="rectangle green"></span> 
+            Vegetation
+        </div>
+
+        <div class="legend-item">
+            <span class="rectangle grey"></span> 
+            Urban
+        </div>
     </div>
 
-    <div class="legend-item">
-        <span class="rectangle red"></span> 
-        Flood Zone
-    </div>
-
-    <div class="legend-item">
-        <span class="rectangle green"></span> 
-        Vegetation
-    </div>
-
-    <div class="legend-item">
-        <span class="rectangle grey"></span> 
-        Urban
-    </div>
-</div>
+    <hr>
 
     <div class="control-group">
         <h3>1. Select Scenario</h3>
