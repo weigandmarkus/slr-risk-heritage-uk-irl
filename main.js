@@ -50,7 +50,8 @@ const baseLayer = new ol.layer.Tile({
         attributions: [
     '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a>',
     '&copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>',
-    '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OSM</a>'
+    '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OSM</a>',
+    ' | <strong>Projection:</strong> Europe Albers Equal Area Conic'
 ]
     })
 });

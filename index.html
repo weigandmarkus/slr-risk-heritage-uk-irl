@@ -37,7 +37,16 @@
         <em>Note: The Shetland Islands are excluded from this model to maintain a higher resolution focus on the contiguous landmasses of Great Britain and Ireland.</em>
     </p>
 
-    <h3>Modelling Workflow: Flood Zones</h3>
+    <h3>Scenario Definitions (IPCC AR6)</h3>
+    <p> The <strong>Shared Socioeconomic Pathways (SSPs)</strong> represent different possible futures of global development and greenhouse gas emissions, ranging from sustainability-focused growth to unchecked fossil fuel consumption. </p>
+    <p>Source: IPCC AR6 WGI: Framing, Context, and Methods (2021), Cross-Chapter Box 1.4:</p>
+    <ul>
+        <li><strong>SSP1-2.6 (Paris Agreement):</strong> Stays below 2.0°C warming relative to 1850-1900 with implied net zero emissions in the second half of the century.</li>
+        <li><strong>SSP2-4.5 (Middle of the Road):</strong> Deviates mildly from a "no-additional-climate-policy" reference scenario, resulting in a best-estimate warming around 2.7°C by 2100.</li>
+        <li><strong>SSP5-8.5 (Fossil-Fueled):</strong> A high reference scenario with no additional climate policy. Emission levels this high are only associated with fossil-fueled development pathways, resulting in warming of >4.4°C by 2100.</li>
+    </ul>
+
+    <h3>Modelling Workflow: Projected Flood Zones</h3>
     <p><strong>1. DEM Preparation:</strong></p>
     <ul>
         <li><strong>Source:</strong> Derived from Copernicus GLO-30 (DGED), using 32-bit floating-point precision to accurately model decimal water rises.</li>
@@ -47,6 +56,7 @@
 
     <p><strong>2. Inundation Analysis (Modified Bathtub Model):</strong></p>
     <ul>
+        <li><strong>Scope:</strong> The analysis was conducted for nine distinct combinations, covering three climate scenarios (SSP1-2.6, SSP2-4.5, SSP5-8.5) across three future timeframes (2050, 2100, 2150).</li>
         <li><strong>Water Surface:</strong> We used IDW (Inverse Distance Weighted) Interpolation on regional projection points (derived from the NASA/IPCC Projection Tool). This creates a sloping water surface that accounts for regional gravity and tidal differences.</li>
         <li><strong>Hydrological Connectivity:</strong> To prevent false flooding in isolated inland lowlands (e.g., quarries), we applied a Region Group algorithm. This filtered out isolated "puddles," ensuring only areas physically connected to the ocean are mapped as flooded.</li>
     </ul>
@@ -60,40 +70,38 @@
     <p><strong>1. Data Harmonization:</strong></p>
     <ul>
         <li>We aggregated data from five separate national agencies (Historic England, HES, Cadw, NMS, and DfC).</li>
-        <li>Because every country uses different naming conventions, we created a unified schema, mapping local fields into a standardized format.</li>
+        <li>Because every country uses different naming conventions, we created a unified schema, mapping local fields (e.g., "Townland", "Scheduled Monument") into a standardized format.</li>
     </ul>
 
     <p><strong>2. The Risk Matrix:</strong></p>
     <ul>
-        <li>Instead of creating separate map layers for every year, we calculated a risk matrix. Every site was spatially intersected with every flood scenario.</li>
-        <li>This resulted in a binary coding system (0 = Safe, 1 = Flooded) embedded in the site's attributes, allowing the web map to instantly filter thousands of sites without reloading data.</li>
+        <li>Instead of creating separate map layers for every year, we calculated a risk matrix. Every site was spatially intersected with every projected flood scenario.</li>
+        <li>This resulted in a pre-calculated status (Safe vs. Flooded) for every site. This allows the map to switch between scenarios instantly without needing to process complex data on the fly.</li>
     </ul>
 
-    <h3>Scenario Definitions (IPCC AR6)</h3>
-    <p>Source: IPCC AR6 WGI: Framing, Context, and Methods (2021), Cross-Chapter Box 1.4:</p>
-    <ul>
-        <li><strong>SSP1-2.6 (Paris Agreement):</strong> Stays below 2.0°C warming relative to 1850-1900 with implied net zero emissions in the second half of the century.</li>
-        <li><strong>SSP2-4.5 (Middle of the Road):</strong> Deviates mildly from a ‘no-additional-climate-policy’ reference scenario, resulting in a best-estimate warming around 2.7°C by 2100.</li>
-        <li><strong>SSP5-8.5 (Fossil-Fueled):</strong> A high reference scenario with no additional climate policy. Emission levels this high are only associated with fossil-fueled development pathways.</li>
-    </ul>
+    <h3>Limitations</h3>
+    <p>
+        While this model accounts for regional relative sea-level differences, it does not simulate physical coastal defenses. We assume that barriers such as sea dikes, floodgates, or seawalls either do not exist. 
+        Additionally, projections represent a Mean High Water (MHW) baseline. Factors such as extreme storm surges, wave run-up, or high/low tides are not modeled.
+    </p>
 
     <h3>Data Sources</h3>
     
     <h4 style="color: #e0e0e0; font-size: 0.95rem; margin-top: 15px; margin-bottom: 5px;">Geospatial & Climate Data</h4>
     <ul>
-        <li><strong>Elevation Model:</strong> Copernicus GLO-30 (DGED) - European Space Agency.</li>
-        <li><strong>Sea Level Projections:</strong> IPCC AR6 (Intergovernmental Panel on Climate Change).</li>
-        <li><strong>Control Point Data:</strong> NASA Sea Level Projection Tool.</li>
-        <li><strong>Basemap:</strong> Stadia Maps, OpenMapTiles, OpenStreetMap.</li>
+        <li><strong>Elevation Model:</strong> <a href="https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM" target="_blank" style="color: #4db8ff;">Copernicus GLO-30 (DGED) - European Space Agency</a>.</li>
+        <li><strong>Sea Level Projections:</strong> <a href="https://www.ipcc.ch/report/ar6/wg1/" target="_blank" style="color: #4db8ff;">IPCC AR6 (Intergovernmental Panel on Climate Change)</a>.</li>
+        <li><strong>Control Point Data:</strong> <a href="https://sealevel.nasa.gov/ipcc-ar6-sea-level-projection-tool" target="_blank" style="color: #4db8ff;">NASA Sea Level Projection Tool</a>.</li>
+        <li><strong>Basemap:</strong> <a href="https://docs.stadiamaps.com/map-styles/alidade-smooth-dark/" target="_blank" style="color: #4db8ff;">Stadia Maps</a>, <a href="https://openmaptiles.org/" target="_blank" style="color: #4db8ff;">OpenMapTiles</a>, <a href="https://www.openstreetmap.org/copyright" target="_blank" style="color: #4db8ff;">OpenStreetMap</a>.</li>
     </ul>
 
     <h4 style="color: #e0e0e0; font-size: 0.95rem; margin-top: 15px; margin-bottom: 5px;">Archaeological Data</h4>
     <ul>
-        <li><strong>Ireland:</strong> National Monuments Service (Archaeological Survey of Ireland).</li>
-        <li><strong>Scotland:</strong> Historic Environment Scotland (Scheduled Monuments).</li>
-        <li><strong>England:</strong> Historic England (National Heritage List).</li>
-        <li><strong>Wales:</strong> Cadw (Scheduled Monuments).</li>
-        <li><strong>Northern Ireland:</strong> Department for Communities (Sites and Monuments Record).</li>
+        <li><strong>Ireland:</strong> <a href="https://data.gov.ie/dataset/national-monuments-service-archaeological-survey-of-ireland" target="_blank" style="color: #4db8ff;">National Monuments Service (Archaeological Survey of Ireland)</a>.</li>
+        <li><strong>Scotland:</strong> <a href="https://www.trove.scot/explore/download-our-data/scheduled-monuments-data-for-download" target="_blank" style="color: #4db8ff;">Historic Environment Scotland (Scheduled Monuments)</a>.</li>
+        <li><strong>England:</strong> <a href="https://opendata-historicengland.hub.arcgis.com/datasets/historicengland::national-heritage-list-for-england-nhle/explore?layer=6" target="_blank" style="color: #4db8ff;">Historic England (National Heritage List)</a>.</li>
+        <li><strong>Wales:</strong> <a href="https://datamap.gov.wales/layers/inspire-wg:Cadw_SAM" target="_blank" style="color: #4db8ff;">Cadw (Scheduled Monuments)</a>.</li>
+        <li><strong>Northern Ireland:</strong> <a href="https://www.communities-ni.gov.uk/publications/historic-environment-digital-datasets" target="_blank" style="color: #4db8ff;">Department for Communities (Sites and Monuments Record)</a>.</li>
     </ul>
     
     <p class="modal-footer">
@@ -123,7 +131,7 @@
 
         <div class="legend-item">
             <span class="rectangle red"></span> 
-            Flood Zone
+            Projected Flood Zone
         </div>
 
         <div class="legend-item">
@@ -176,7 +184,7 @@
     <div class="control-group">
         <label class="toggle-control">
             <input type="checkbox" id="flood-toggle" checked> 
-            <span class="toggle-label">Show Flood Zones</span>
+            <span class="toggle-label">Show Projected Flood Zones</span>
         </label>
         
         <label class="toggle-control">
