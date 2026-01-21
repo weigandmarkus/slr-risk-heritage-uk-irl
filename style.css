@@ -350,6 +350,11 @@ hr {
     font-size: 1.1rem;
 }
 
+.modal-body {
+    text-align: justify;
+    text-justify: inter-word; /* Optional: Makes spacing look slightly better */
+}
+
 .modal-body ul {
     margin-left: 20px;
     line-height: 1.6;
