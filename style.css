@@ -350,9 +350,13 @@ hr {
     font-size: 1.1rem;
 }
 
-.modal-body {
+.modal-body p, .modal-body li {
     text-align: justify;
-    text-justify: inter-word; /* Optional: Makes spacing look slightly better */
+    
+    /* These lines fix the "torn apart" gaps */
+    -webkit-hyphens: auto; /* For Safari/Chrome */
+    -ms-hyphens: auto;     /* For Edge */
+    hyphens: auto;         /* Standard */
 }
 
 .modal-body ul {
