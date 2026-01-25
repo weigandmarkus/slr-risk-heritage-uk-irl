@@ -373,16 +373,6 @@ hr {
 
 /* Legend Styles */
 
-
-.legend h4 {
-    font-size: 1.0rem; 
-    margin-bottom: 5px;
-    color: #e0e0e0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-}
-
 .legend-item {
     display: flex;
     align-items: center;
@@ -436,4 +426,13 @@ hr {
 .rectangle.grey {
     background-color: #333333; 
     border: 1px solid #444;    
+}
+
+/* Hint Text */
+.hint-text {
+    font-size: 0.8rem;
+    color: #888;          
+    margin-top: 8px;      
+    margin-left: 5px;     
+    line-height: 1.3;
 }
