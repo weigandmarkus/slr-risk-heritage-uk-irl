@@ -25,64 +25,64 @@
             <div class="modal-body">
     <h3>What is this map?</h3>
     <p>
-        This interactive tool visualizes the threat of future sea-level rise to the archaeological heritage of the United Kingdom and Ireland. 
-        By intersecting advanced climate projections with national heritage registers, we identify which historical sites are at risk of being lost to the ocean under different climate scenarios.
+        This interactive map visualizes the threat of future sea-level rise to the archaeological heritage of the United Kingdom and Ireland. 
+        By combining climate projections with national heritage registers, we identify which historical sites are at risk of being lost to the ocean under different climate scenarios.
     </p>
 
     <h3>Theoretical Basis: Relative Sea Level (RSL)</h3>
     <p>
-        This project visualizes Relative Sea Level (RSL) rather than just global averages. 
+        This project visualizes Relative Sea Level (RSL) rather than global averages. 
         RSL accounts for local vertical land motion. In the UK and Ireland, the land in the north is rising (recovering from the last Ice Age), while the south is sinking.
         <br>
-        <em>Note: The Shetland Islands are excluded from this model to maintain a higher resolution focus on the contiguous landmasses of Great Britain and Ireland.</em>
+        <em>Note: The Shetland Islands are excluded to focus on the contiguous landmasses of Great Britain and Ireland.</em>
     </p>
 
     <h3>Scenario Definitions (IPCC AR6)</h3>
-    <p> The <strong>Shared Socioeconomic Pathways (SSPs)</strong> represent different possible futures of global development and greenhouse gas emissions, ranging from sustainability-focused growth to unchecked fossil fuel consumption. </p>
-    <p>Source: IPCC AR6 WGI: Framing, Context, and Methods (2021), Cross-Chapter Box 1.4:</p>
+    <p> The <strong>Shared Socioeconomic Pathways (SSPs)</strong> represent different global futures, ranging from strong climate action to continued reliance on fossil fuels. </p>
+    <p>Source: IPCC AR6 WGI (2021), Cross-Chapter Box 1.4:</p>
     <ul>
-        <li><strong>SSP1-2.6 (Paris Agreement):</strong> Stays below 2.0°C warming relative to 1850-1900 with implied net zero emissions in the second half of the century.</li>
-        <li><strong>SSP2-4.5 (Middle of the Road):</strong> Deviates mildly from a "no-additional-climate-policy" reference scenario, resulting in a best-estimate warming around 2.7°C by 2100.</li>
-        <li><strong>SSP5-8.5 (Fossil-Fueled):</strong> A high reference scenario with no additional climate policy. Emission levels this high are only associated with fossil-fueled development pathways, resulting in warming of >4.4°C by 2100.</li>
+        <li><strong>SSP1-2.6 (Paris Agreement):</strong> Limits warming to 2.0°C relative to 1850-1900. Assumes net zero emissions in the second half of the century.</li>
+        <li><strong>SSP2-4.5 (Middle of the Road):</strong> Current trends continue. Best-estimate warming of ~2.7°C by 2100.</li>
+        <li><strong>SSP5-8.5 (Fossil-Fueled):</strong> A worst-case, high-emission scenario with no additional climate policy. Estimated warming of >4.4°C by 2100.</li>
     </ul>
 
     <h3>Modelling Workflow: Projected Flood Zones</h3>
     <p><strong>1. DEM Preparation:</strong></p>
     <ul>
-        <li><strong>Source:</strong> Derived from Copernicus GLO-30 (DGED), using 32-bit floating-point precision to accurately model decimal water rises.</li>
-        <li><strong>Processing:</strong> 89 individual elevation tiles were mosaicked into a single continuous surface and reprojected to Europe Albers Equal Area Conic for accurate area calculation.</li>
-        <li><strong>Resampling:</strong> Pixels were resampled to be perfectly square to ensure interpolation algorithms calculated distance accurately.</li>
+        <li><strong>Source:</strong> Copernicus GLO-30 (DGED). We used 32-bit floating-point precision to capture decimal-level water rises.</li>
+        <li><strong>Processing:</strong> 89 tiles were mosaicked and reprojected to Europe Albers Equal Area Conic for accurate area calculation.</li>
+        <li><strong>Resampling:</strong> Pixels were resampled to squares to ensure accurate distance interpolation.</li>
     </ul>
 
     <p><strong>2. Inundation Analysis (Modified Bathtub Model):</strong></p>
     <ul>
-        <li><strong>Scope:</strong> The analysis was conducted for nine distinct combinations, covering three climate scenarios (SSP1-2.6, SSP2-4.5, SSP5-8.5) across three future timeframes (2050, 2100, 2150).</li>
-        <li><strong>Water Surface:</strong> We used IDW (Inverse Distance Weighted) Interpolation on regional projection points (derived from the NASA/IPCC Projection Tool). This creates a sloping water surface that accounts for regional gravity and tidal differences.</li>
-        <li><strong>Hydrological Connectivity:</strong> To prevent false flooding in isolated inland lowlands (e.g., quarries), we applied a Region Group algorithm. This filtered out isolated "puddles," ensuring only areas physically connected to the ocean are mapped as flooded.</li>
+        <li><strong>Scope:</strong> The analysis was conducted for 9 combinations (3 scenarios: 'SSP1-2.6', 'SSP2-4.5', 'SSP5-8.5' across 3 timeframes: '2050', '2100', '2150').</li>
+        <li><strong>Water Surface:</strong> We used IDW (Inverse Distance Weighted) Interpolation on NASA/IPCC projection points to create a sloping water surface that respects regional gravity.</li>
+        <li><strong>Hydrological Connectivity:</strong> We applied a Region Group algorithm to remove isolated inland "puddles" (e.g., quarries). Only land physically connected to the ocean is mapped as flooded.</li>
     </ul>
 
     <p><strong>3. Web Optimization:</strong></p>
     <ul>
-        <li>Vector zones were simplified using the Douglas-Peucker algorithm (100m tolerance) and a minimum area threshold of 50,000 m² to optimize performance without losing visual accuracy.</li>
+        <li>Zones were simplified using the Douglas-Peucker algorithm (100m tolerance, 50,000 m² min area) to improve browser performance.</li>
     </ul>
 
     <h3>Modelling Workflow: Archaeological Data</h3>
     <p><strong>1. Data Harmonization:</strong></p>
     <ul>
         <li>We aggregated data from five separate national agencies (Historic England, HES, Cadw, NMS, and DfC).</li>
-        <li>Because every country uses different naming conventions, we created a unified schema, mapping local fields into a standardized format.</li>
+        <li>Since naming conventions vary by country, we mapped local fields into a single unified schema.</li>
     </ul>
 
     <p><strong>2. The Risk Matrix:</strong></p>
     <ul>
-        <li>Instead of creating separate map layers for every year, we calculated a risk matrix. Every site was spatially intersected with every projected flood scenario.</li>
-        <li>This resulted in a pre-calculated status (Safe vs. Flooded) for every site. This allows the map to switch between scenarios instantly without needing to process complex data on the fly.</li>
+        <li>Instead of creating separate map layers for every year, we calculated a risk matrix. Every site was spatially intersected with every flood scenario.</li>
+        <li>We pre-calculated a binary status (Safe vs. Flooded) for every site. This allows instant filtering without heavy browser processing.</li>
     </ul>
 
     <h3>Limitations</h3>
     <p>
-        While this model accounts for regional relative sea-level differences, it does not simulate physical coastal defenses. We assume that barriers such as sea dikes, floodgates, or seawalls either do not exist. 
-        Additionally, projections represent a Mean High Water (MHW) baseline. Factors such as extreme storm surges, wave run-up, or high/low tides are not modeled.
+        This model ignores physical defenses. We assume dykes and sea walls do not exist or have failed. 
+        Additionally, projections use a Mean High Water (MHW) baseline; dynamic factors like storm surges and wave run-up are not included.
     </p>
 
     <div style="text-align: left;">
@@ -117,7 +117,7 @@
    <div class="sidebar">
     <h1>Drowning Heritage</h1>
     
-    <p class="subtitle">The threat of sea level rise on archaeological sites in the UK and Ireland.</p>
+    <p class="subtitle">Rising sea levels threaten archaeological sites in the UK and Ireland. <br> Select a scenario and year to explore how.</p>
     
     <button id="about-btn" class="secondary-btn" style="margin-bottom: 5px; width: 100%;">About & Methodology</button>
     

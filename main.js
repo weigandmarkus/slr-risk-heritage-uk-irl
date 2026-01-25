@@ -1,12 +1,12 @@
 /* -------------------------------------------------------------
-   1. DEFINE PROJECTION (Custom UK Albers)
+   1. DEFINE PROJECTION (Europe Albers)
    ------------------------------------------------------------- */
 proj4.defs("ESRI:102013", "+proj=aea +lat_1=43 +lat_2=62 +lat_0=30 +lon_0=10 +x_0=0 +y_0=0 +ellps=intl +units=m +no_defs");
 ol.proj.proj4.register(proj4); 
 
 const albersProjection = ol.proj.get('ESRI:102013');
 
-// Extent covering the UK
+// Extent
 albersProjection.setExtent([-4000000, 1000000, 4000000, 8000000]);
 
 /* -------------------------------------------------------------
@@ -17,9 +17,9 @@ const ukCenter = ol.proj.fromLonLat([-4.5, 54.5], albersProjection);
 const view = new ol.View({
     projection: albersProjection,
     center: ukCenter,
-    zoom: 5,     // Starting zoom
-    minZoom: 4,  // prevent zooming out to see the whole world
-    maxZoom: 9  // prevent zooming in too close (Hides the coastline gap)
+    zoom: 5,     
+    minZoom: 4, 
+    maxZoom: 9  
 });
 
 const map = new ol.Map({
@@ -28,7 +28,7 @@ const map = new ol.Map({
     controls: ol.control.defaults.defaults().extend([
         new ol.control.ScaleLine({ 
             units: 'metric',
-            bar: false, // minimalist line style
+            bar: false, 
             steps: 4,
             text: true,
             minWidth: 100
@@ -44,9 +44,10 @@ const baseLayer = new ol.layer.Tile({
         // Stadia Maps URL
         url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}@2x.png',
         
-        // Critical: Tells OpenLayers to shrink the big tiles down for sharpness
+        // Tile Sharpness
         tilePixelRatio: 2,
-        // Required Attribution
+
+        // Attributions
         attributions: [
     '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a>',
     '&copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>',
@@ -58,7 +59,7 @@ const baseLayer = new ol.layer.Tile({
 map.addLayer(baseLayer);
 
 /* -------------------------------------------------------------
-   4. FLOOD LAYERS SETUP
+   4. FLOOD LAYERS
    ------------------------------------------------------------- */
 const floodLayers = {};
 const scenarios = ['ssp1', 'ssp2', 'ssp5'];
@@ -78,7 +79,7 @@ scenarios.forEach(scen => {
                 stroke: null
             }),
             className: 'blend-layer', 
-            visible: false
+            visible: (id == 'ssp1_2050')
         });
         
         floodLayers[id] = vectorLayer;
@@ -87,9 +88,9 @@ scenarios.forEach(scen => {
 });
 
 /* -------------------------------------------------------------
-   5. ARCHAEOLOGICAL SITES LAYER (The "Matrix" Logic)
+   5. ARCHAEOLOGICAL SITES LAYER
    ------------------------------------------------------------- */
-// Current state variables (default selection)
+// Default scenario and year
 let currentScenario = 'ssp1';
 let currentYear = '2050';
 
@@ -98,9 +99,9 @@ const sitesSource = new ol.source.Vector({
     format: new ol.format.GeoJSON()
 });
 
-// Style Function: This runs for every point every time the map moves or updates
+// Style Function
 const sitesStyleFunction = function(feature) {
-    // Construct the attribute name based on user selection (e.g., "ssp1_2050")
+    // Construct the attribute name based on selection (e.g., "ssp1_2050")
     const attributeKey = `${currentScenario}_${currentYear}`;
     
     // Check if this site is affected in this specific scenario (Value 1 = Yes)
@@ -111,7 +112,7 @@ const sitesStyleFunction = function(feature) {
         return new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 5,
-                fill: new ol.style.Fill({ color: '#1f78b4' }), // Blue Fill
+                fill: new ol.style.Fill({ color: '#1f78b4' }), 
                 stroke: new ol.style.Stroke({ color: '#ffffff', width: 1.5 })
             })
         });
@@ -124,17 +125,17 @@ const sitesStyleFunction = function(feature) {
 const sitesLayer = new ol.layer.Vector({
     source: sitesSource,
     style: sitesStyleFunction,
-    visible: false // Hidden initially until user clicks Update
+    visible: true 
 });
 map.addLayer(sitesLayer);
 
 /* -------------------------------------------------------------
-   6. UI INTERACTION LOGIC
+   6. UI LOGIC
    ------------------------------------------------------------- */
 
-// UPDATE MAP BUTTON LOGIC
+// UPDATE MAP BUTTON
 document.getElementById('update-btn').addEventListener('click', () => {
-    // 1. Get User Input for Scenarios
+    // 1. User Input
     const scenRadios = document.getElementsByName('scenario');
     for (const r of scenRadios) { if (r.checked) currentScenario = r.value; }
 
@@ -175,7 +176,7 @@ document.getElementById('reset-zoom-btn').addEventListener('click', () => {
     });
 });
 
-// NEW: RESET MAP BUTTON LOGIC
+// RESET MAP BUTTON
 document.getElementById('reset-map-btn').addEventListener('click', () => {
     // 1. Hide ALL flood layers
     Object.keys(floodLayers).forEach(key => {
@@ -198,13 +199,13 @@ document.getElementById('reset-map-btn').addEventListener('click', () => {
 
 
 /* -------------------------------------------------------------
-   7 & 8. UNIFIED INTERACTION (Highlight + Popup)
+   7 & 8. INTERACTION (Highlight + Popup)
    ------------------------------------------------------------- */
 const container = document.getElementById('popup');
 const content = document.getElementById('popup-content');
 const closer = document.getElementById('popup-closer');
 
-// 1. Create the Popup Overlay
+// 1. Create Popup Overlay
 const overlay = new ol.Overlay({
     element: container,
     autoPan: true,
@@ -212,19 +213,19 @@ const overlay = new ol.Overlay({
 });
 map.addOverlay(overlay);
 
-// 2. Define the "Selected" Style (Cyan Highlight)
+// 2. Define the Selected Style (Cyan Highlight)
 const selectedStyle = new ol.style.Style({
     image: new ol.style.Circle({
         radius: 8, 
-        fill: new ol.style.Fill({ color: '#00e5ff' }), // Cyan
+        fill: new ol.style.Fill({ color: '#00e5ff' }), 
         stroke: new ol.style.Stroke({ color: '#fff', width: 3 })
     }),
     zIndex: 999
 });
 
-// 3. Create the Logic (One tool to rule them all)
+// 3. Create the Logic (One tool to rule all)
 const selectInteraction = new ol.interaction.Select({
-    layers: [sitesLayer], // Ignore flood zones
+    layers: [sitesLayer], 
     style: selectedStyle,
     hitTolerance: 5
 });
@@ -233,7 +234,7 @@ map.addInteraction(selectInteraction);
 // 4. When a site is selected, Show Popup
 selectInteraction.on('select', function(e) {
     if (e.selected.length > 0) {
-        // A site was clicked!
+        // Selected Site
         const feature = e.selected[0];
         const coordinate = feature.getGeometry().getCoordinates();
 
@@ -251,7 +252,7 @@ selectInteraction.on('select', function(e) {
             html += `<a href="${link}" target="_blank" class="popup-link">More Information &rarr;</a>`;
         }
 
-        // Show it
+        // Show Popup
         content.innerHTML = html;
         overlay.setPosition(coordinate);
     } else {
@@ -263,13 +264,13 @@ selectInteraction.on('select', function(e) {
 
 // 5. Close Button Logic
 closer.onclick = function() {
-    selectInteraction.getFeatures().clear(); // Turn off the Cyan highlight
-    overlay.setPosition(undefined);          // Hide the popup
+    selectInteraction.getFeatures().clear(); 
+    overlay.setPosition(undefined);          
     closer.blur();
     return false;
 };
 
-// 6. Cursor Pointer (Hand icon on hover)
+// 6. Cursor Pointer on Hover
 map.on('pointermove', function(e) {
     if (e.dragging) return;
     const pixel = map.getEventPixel(e.originalEvent);
@@ -278,22 +279,21 @@ map.on('pointermove', function(e) {
 });
 
 /* -------------------------------------------------------------
-   9. LOADING SCREEN & ABOUT MODAL LOGIC
+   9. LOADING SCREEN & ABOUT MODAL 
    ------------------------------------------------------------- */
 
-// A. LOADING SCREEN
-// We wait for the map to finish its first render frame
+// LOADING SCREEN
 map.once('rendercomplete', function() {
     const loader = document.getElementById('loading-screen');
     if (loader) {
-        loader.style.opacity = '0'; // Fade out
+        loader.style.opacity = '0';
         setTimeout(() => {
-            loader.style.display = 'none'; // Remove from layout
-        }, 500); // Wait for fade to finish
+            loader.style.display = 'none'; 
+        }, 500); 
     }
 });
 
-// B. ABOUT MODAL
+// ABOUT MODAL
 const modal = document.getElementById('about-modal');
 const btn = document.getElementById('about-btn');
 const span = document.getElementById('close-modal');
@@ -303,7 +303,7 @@ btn.onclick = function() {
     modal.style.display = "block";
 }
 
-// Close Modal (X button)
+// Close Modal (Exit Button)
 span.onclick = function() {
     modal.style.display = "none";
 }
