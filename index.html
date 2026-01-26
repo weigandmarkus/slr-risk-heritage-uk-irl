@@ -99,19 +99,19 @@
     
     <h4 style="color: #e0e0e0; font-size: 0.95rem; margin-top: 15px; margin-bottom: 5px;">Geospatial & Climate Data</h4>
     <ul>
-        <li><strong>Elevation Model:</strong> <a href="https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM" target="_blank" style="color: #4db8ff;">Copernicus GLO-30 (DGED) - European Space Agency</a>.</li>
-        <li><strong>Sea Level Projections:</strong> <a href="https://www.ipcc.ch/report/ar6/wg1/" target="_blank" style="color: #4db8ff;">IPCC AR6 (Intergovernmental Panel on Climate Change)</a>.</li>
-        <li><strong>Control Point Data:</strong> <a href="https://sealevel.nasa.gov/ipcc-ar6-sea-level-projection-tool" target="_blank" style="color: #4db8ff;">NASA Sea Level Projection Tool</a>.</li>
+        <li><strong>Elevation Model:</strong> <a href="https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM" target="_blank" style="color: #4db8ff;">Copernicus GLO-30 (DGED) - European Space Agency</a> (2011).</li>
+        <li><strong>Sea Level Projections:</strong> <a href="https://www.ipcc.ch/report/ar6/wg1/" target="_blank" style="color: #4db8ff;">IPCC AR6 (Intergovernmental Panel on Climate Change)</a> (2021).</li>
+        <li><strong>Control Point Data:</strong> <a href="https://sealevel.nasa.gov/ipcc-ar6-sea-level-projection-tool" target="_blank" style="color: #4db8ff;">NASA Sea Level Projection Tool</a> (2021).</li>
         <li><strong>Basemap:</strong> <a href="https://docs.stadiamaps.com/map-styles/alidade-smooth-dark/" target="_blank" style="color: #4db8ff;">Stadia Maps</a>, <a href="https://openmaptiles.org/" target="_blank" style="color: #4db8ff;">OpenMapTiles</a>, <a href="https://www.openstreetmap.org/copyright" target="_blank" style="color: #4db8ff;">OpenStreetMap</a>.</li>
     </ul>
 
     <h4 style="color: #e0e0e0; font-size: 0.95rem; margin-top: 15px; margin-bottom: 5px;">Heritage Data</h4>
     <ul>
-        <li><strong>Ireland:</strong> <a href="https://data.gov.ie/dataset/national-monuments-service-archaeological-survey-of-ireland" target="_blank" style="color: #4db8ff;">National Monuments Service (Archaeological Survey of Ireland)</a>.</li>
-        <li><strong>Scotland:</strong> <a href="https://www.trove.scot/explore/download-our-data/scheduled-monuments-data-for-download" target="_blank" style="color: #4db8ff;">Historic Environment Scotland (Scheduled Monuments)</a>.</li>
-        <li><strong>England:</strong> <a href="https://opendata-historicengland.hub.arcgis.com/datasets/historicengland::national-heritage-list-for-england-nhle/explore?layer=6" target="_blank" style="color: #4db8ff;">Historic England (National Heritage List)</a>.</li>
-        <li><strong>Wales:</strong> <a href="https://datamap.gov.wales/layers/inspire-wg:Cadw_SAM" target="_blank" style="color: #4db8ff;">Cadw (Scheduled Monuments)</a>.</li>
-        <li><strong>Northern Ireland:</strong> <a href="https://www.communities-ni.gov.uk/publications/historic-environment-digital-datasets" target="_blank" style="color: #4db8ff;">Department for Communities (Sites and Monuments Record)</a>.</li>
+        <li><strong>Ireland:</strong> <a href="https://data.gov.ie/dataset/national-monuments-service-archaeological-survey-of-ireland" target="_blank" style="color: #4db8ff;">National Monuments Service (Archaeological Survey of Ireland)</a> (2023).</li>
+        <li><strong>Scotland:</strong> <a href="https://www.trove.scot/explore/download-our-data/scheduled-monuments-data-for-download" target="_blank" style="color: #4db8ff;">Historic Environment Scotland (Scheduled Monuments)</a> (2024).</li>
+        <li><strong>England:</strong> <a href="https://opendata-historicengland.hub.arcgis.com/datasets/historicengland::national-heritage-list-for-england-nhle/explore?layer=6" target="_blank" style="color: #4db8ff;">Historic England (National Heritage List)</a> (2023).</li>
+        <li><strong>Wales:</strong> <a href="https://datamap.gov.wales/layers/inspire-wg:Cadw_SAM" target="_blank" style="color: #4db8ff;">Cadw (Scheduled Monuments)</a> (2023).</li>
+        <li><strong>Northern Ireland:</strong> <a href="https://www.communities-ni.gov.uk/publications/historic-environment-digital-datasets" target="_blank" style="color: #4db8ff;">Department for Communities (Sites and Monuments Record)</a> (2025).</li>
     </ul>
     </div>
     
@@ -128,11 +128,11 @@
     
     <p class="subtitle">Rising sea levels threaten heritage sites in the UK and Ireland. <br> Select a scenario and year to explore how.</p>
     
-    <button id="about-btn" class="secondary-btn" style="margin-bottom: 5px; width: 100%;">About & Methodology</button>
+    <button id="about-btn" class="secondary-btn" style="width: 100%;">About & Methodology</button>
     
     <hr>
 
-    <div class="legend" style="margin-bottom: 10px;">
+    <div class="legend">
         <h3>Legend</h3>
         
         <div class="legend-item">
@@ -215,18 +215,41 @@
         <button id="reset-zoom-btn" class="secondary-btn" style="flex: 1;">Reset Zoom</button>
     </div>
 
-</div>
-
-        <div id="map" class="map"></div>
+    <div id="stats-panel" class="stats-panel">
+    <div class="stats-header">
+        <h4>Projected Impact</h4>
+        <div class="tooltip">
+            ⓘ
+            <span class="tooltip-text">
+                <strong>Percentages represent:</strong><br>
+                1. Share of total heritage sites examined (N=72,808).<br>
+                2. Share of total study area landmass (UK + Ireland).
+            </span>
+        </div>
+    </div>
+    
+    <div class="stat-block">
+        <span class="stat-label">Heritage Sites at Risk</span>
+        <span id="stat-sites" class="stat-value">
+            54 <span style="color:#888; font-weight:normal;">(0.07%)</span>
+        </span>
     </div>
 
-    <div id="popup" class="ol-popup">
-        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-        <div id="popup-content"></div>
+    <div class="stat-block">
+        <span class="stat-label">Flooded Landmass</span>
+        <span id="stat-land" class="stat-value">
+            637.45 km² <span style="color:#888; font-weight:normal;">(0.20%)</span>
+        </span>
     </div>
+</div> </div> <div id="map" class="map"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
-    <script src="main.js"></script>
+</div> <div id="popup" class="ol-popup">
+       <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+       <div id="popup-content"></div>
+   </div>
+
+   <script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
+   <script src="main.js"></script>
 </body>
 </html>

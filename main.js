@@ -1,4 +1,25 @@
 /* -------------------------------------------------------------
+   IMPACT STATISTICS LOOKUP TABLE
+   ------------------------------------------------------------- */
+const scenarioStats = {
+    // SSP1 (Paris Agreement)
+    'ssp1_2050': { sites: 54,  sitePct: '0.07', area: '637.45',   areaPct: '0.20' },
+    'ssp1_2100': { sites: 79,  sitePct: '0.11', area: '1,058.75', areaPct: '0.33' },
+    'ssp1_2150': { sites: 94,  sitePct: '0.13', area: '2,164.90', areaPct: '0.68' },
+
+    // SSP2 (Middle of the Road)
+    'ssp2_2050': { sites: 55,  sitePct: '0.08', area: '648.61',   areaPct: '0.21' },
+    'ssp2_2100': { sites: 93,  sitePct: '0.13', area: '1,734.23', areaPct: '0.55' },
+    'ssp2_2150': { sites: 118, sitePct: '0.16', area: '2,474.73', areaPct: '0.78' },
+
+    // SSP5 (Fossil-Fueled)
+    'ssp5_2050': { sites: 58,  sitePct: '0.08', area: '701.48',   areaPct: '0.22' },
+    'ssp5_2100': { sites: 125, sitePct: '0.17', area: '2,444.20', areaPct: '0.77' },
+    'ssp5_2150': { sites: 321, sitePct: '0.44', area: '5,890.29', areaPct: '1.86' }
+};
+
+
+/* -------------------------------------------------------------
    1. DEFINE PROJECTION (Europe Albers)
    ------------------------------------------------------------- */
 proj4.defs("ESRI:102013", "+proj=aea +lat_1=43 +lat_2=62 +lat_0=30 +lon_0=10 +x_0=0 +y_0=0 +ellps=intl +units=m +no_defs");
@@ -99,12 +120,11 @@ const sitesSource = new ol.source.Vector({
     format: new ol.format.GeoJSON()
 });
 
-// Style Function
 const sitesStyleFunction = function(feature) {
-    // Construct the attribute name based on selection (e.g., "ssp1_2050")
+    // Construct attribute name based on selection (e.g., "ssp1_2050")
     const attributeKey = `${currentScenario}_${currentYear}`;
     
-    // Check if this site is affected in this specific scenario (Value 1 = Yes)
+    // Check if this site is affected (Value 1 = Yes)
     const isAffected = feature.get(attributeKey);
 
     if (isAffected === 1) {
@@ -141,30 +161,45 @@ document.getElementById('update-btn').addEventListener('click', () => {
 
     const yearRadios = document.getElementsByName('year');
     for (const r of yearRadios) { if (r.checked) currentYear = r.value; }
+    
+    // Define key for lookups
+    const key = `${currentScenario}_${currentYear}`;
 
     // 2. Manage Flood Layers
     const floodCheckbox = document.getElementById('flood-toggle');
     
-    // Hide ALL flood layers first
-    Object.keys(floodLayers).forEach(key => {
-        floodLayers[key].setVisible(false);
+    Object.keys(floodLayers).forEach(k => {
+        floodLayers[k].setVisible(false);
     });
 
-    // Show ONLY the selected flood layer (IF the box is checked)
-    const selectedKey = `${currentScenario}_${currentYear}`;
-    if (floodLayers[selectedKey]) {
-        // If checkbox is ON, show layer. If OFF, keep hidden.
-        floodLayers[selectedKey].setVisible(floodCheckbox.checked);
+    if (floodLayers[key]) {
+        floodLayers[key].setVisible(floodCheckbox.checked);
     }
 
     // 3. Manage Sites Layer
     const sitesCheckbox = document.getElementById('sites-toggle');
-    
-    // Update the matrix
     sitesLayer.changed(); 
-
-    // Set visibility based on checkbox
     sitesLayer.setVisible(sitesCheckbox.checked);
+
+    // 4. Display statistics (From Lookup Table)
+    const statsPanel = document.getElementById('stats-panel');
+    const sitesStat = document.getElementById('stat-sites');
+    const landStat = document.getElementById('stat-land');
+
+    const data = scenarioStats[key];
+
+    if (data) {
+        // Update Sites Text: "54 (0.07%)"
+        sitesStat.innerHTML = `${data.sites} <span style="color:#888; font-weight:normal;">(${data.sitePct}%)</span>`;
+        
+        // Update Landmass Text: "637.45 km² (0.20%)"
+        landStat.innerHTML = `${data.area} km² <span style="color:#888; font-weight:normal;">(${data.areaPct}%)</span>`;
+        
+        // Panel is visible
+        statsPanel.style.display = 'block';
+    } else {
+        statsPanel.style.display = 'none';
+    }
 });
 
 // RESET ZOOM BUTTON
@@ -186,7 +221,7 @@ document.getElementById('reset-map-btn').addEventListener('click', () => {
     // 2. Hide Sites Layer
     sitesLayer.setVisible(false);
 
-    // 3. Clear any active selection (Cyan highlight)
+    // 3. Clear any active selection
     if (typeof selectInteraction !== 'undefined') {
         selectInteraction.getFeatures().clear();
     }
@@ -223,7 +258,7 @@ const selectedStyle = new ol.style.Style({
     zIndex: 999
 });
 
-// 3. Create the Logic (One tool to rule all)
+// 3. Create Logic
 const selectInteraction = new ol.interaction.Select({
     layers: [sitesLayer], 
     style: selectedStyle,
@@ -231,14 +266,13 @@ const selectInteraction = new ol.interaction.Select({
 });
 map.addInteraction(selectInteraction);
 
-// 4. When a site is selected, Show Popup
+// 4. When site is selected, Show Popup
 selectInteraction.on('select', function(e) {
     if (e.selected.length > 0) {
-        // Selected Site
+        
         const feature = e.selected[0];
         const coordinate = feature.getGeometry().getCoordinates();
 
-        // Get Data
         const name = feature.get('Unified_Name') || 'Unknown Site';
         const type = feature.get('Unified_Type') || 'Heritage Site';
         const link = feature.get('Unified_Link');
@@ -256,13 +290,13 @@ selectInteraction.on('select', function(e) {
         content.innerHTML = html;
         overlay.setPosition(coordinate);
     } else {
-        // Nothing selected (clicked empty space) -> Close Popup
+        // Nothing selected -> Close Popup
         overlay.setPosition(undefined);
         closer.blur();
     }
 });
 
-// 5. Close Button Logic
+// 5. Close Button
 closer.onclick = function() {
     selectInteraction.getFeatures().clear(); 
     overlay.setPosition(undefined);          
@@ -303,7 +337,7 @@ btn.onclick = function() {
     modal.style.display = "block";
 }
 
-// Close Modal (Exit Button)
+// Close Modal (X-Button)
 span.onclick = function() {
     modal.style.display = "none";
 }
