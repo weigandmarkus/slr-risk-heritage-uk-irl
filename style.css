@@ -558,8 +558,14 @@ hr {
     border-color: transparent transparent transparent #444;
 }
 
-/* Show on Hover */
-.tooltip:hover .tooltip-text {
+/* Show on Click (Active Class) */
+.tooltip.active .tooltip-text {
     visibility: visible;
     opacity: 1;
+}
+
+/* Make the icon look clickable */
+.tooltip {
+    cursor: pointer;
+    user-select: none; 
 }

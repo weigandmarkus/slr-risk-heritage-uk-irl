@@ -348,3 +348,23 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+
+/* -------------------------------------------------------------
+   10. TOOLTIP CLICK LOGIC (Mobile Friendly)
+   ------------------------------------------------------------- */
+const tooltip = document.getElementById('info-tooltip');
+
+// Toggle on click
+tooltip.addEventListener('click', function(e) {
+    e.stopPropagation(); 
+    this.classList.toggle('active');
+});
+
+// Close when clicking anywhere else on the screen
+document.addEventListener('click', function(e) {
+    if (tooltip.classList.contains('active')) {
+        if (!tooltip.contains(e.target)) {
+            tooltip.classList.remove('active');
+        }
+    }
+});
